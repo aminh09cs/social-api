@@ -1,7 +1,7 @@
 import databaseService from '~/services/database.service'
 import userService from '~/services/user.service'
 import { hashPassword } from '~/utils/crypto'
-import { check, checkSchema } from 'express-validator'
+import { checkSchema } from 'express-validator'
 import { validate } from '~/utils/support'
 import { HTTP_STATUS, MESSAGES, UserVerifyStatusType } from '~/utils/constant'
 import { ErrorStatus } from '~/models/error-status'
