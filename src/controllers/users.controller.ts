@@ -197,7 +197,7 @@ export const unfollowController = async (req: Request<UnfollowParams>, res: Resp
 
   if (user_id === followed_user_id) {
     throw new ErrorStatus({
-      message: MESSAGES.YOU_CANNOT_UNFOLLOW_YOURSELF,
+      message: "You can't unfollow yourself",
       status: HTTP_STATUS.CONFLICT
     })
   }

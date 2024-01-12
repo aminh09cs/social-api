@@ -8,7 +8,7 @@ import { ErrorStatus } from '~/models/error-status'
 import { verifyToken } from '~/utils/jwt'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
-import { getRandomValues } from 'crypto'
+import { REGEX_USERNAME } from '~/utils/regex/regex'
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -395,14 +395,17 @@ export const updateMeValidator = validate(
       username: {
         optional: true,
         isString: { errorMessage: MESSAGES.USERNAME_MUST_BE_A_STRING },
-        isLength: { options: { min: 1, max: 250 } },
         custom: {
           options: async (value, { req }) => {
+            if (!REGEX_USERNAME.test(value)) {
+              throw new Error(MESSAGES.USERNAME_IS_INVALID)
+            }
             const { user_id } = req.decoded_authorization
             const user = await databaseService.users.findOne({ username: value })
-            if (user_id !== user?._id.toString() && user) {
+            if (user && user_id.toString() !== user?._id.toString()) {
               throw new Error(MESSAGES.USERNAME_ALREADY_EXISTS)
             }
+
             return true
           }
         }

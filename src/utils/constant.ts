@@ -29,7 +29,9 @@ export const MESSAGES = {
   BIO_MUST_BE_A_STRING: 'Bio must be a string',
   LOCATION_MUST_BE_A_STRING: 'Location must be a string',
   USERNAME_MUST_BE_A_STRING: 'Username must be a string',
-  USERNAME_ALREADY_EXISTS: 'User name already exists',
+  USERNAME_ALREADY_EXISTS: 'Username already exists',
+  USERNAME_IS_INVALID: 'Username must be 4-15 characters, not start with number and contain only letters, numbers',
+
   AVATAR_MUST_BE_A_STRING: 'Avatar must be a string',
   FOLLOW_USERID_IS_REQUIRED: 'Follow userid is required',
   FOLLOW_USERID_IS_INVALID: 'Follow userid is invalid',
