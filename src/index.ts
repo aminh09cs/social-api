@@ -9,6 +9,7 @@ database.connectDatabase().catch(console.dir)
 const app = express()
 const port = 4000
 
+console.log('process', process.argv)
 createFolder()
 app.use(express.json())
 
