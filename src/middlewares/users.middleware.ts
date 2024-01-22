@@ -387,6 +387,7 @@ export const updateMeValidator = validate(
         isString: { errorMessage: MESSAGES.BIO_MUST_BE_A_STRING },
         isLength: { options: { min: 1, max: 250 } }
       },
+
       location: {
         optional: true,
         isString: { errorMessage: MESSAGES.LOCATION_MUST_BE_A_STRING },

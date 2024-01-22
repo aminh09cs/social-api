@@ -1,3 +1,5 @@
+import path from 'path'
+
 export const MESSAGES = {
   USER_NOT_FOUND: 'User not found',
   NAME_IS_REQUIRED: 'Name is required',
@@ -55,7 +57,8 @@ export const HTTP_STATUS = {
   TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
   SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504
+  GATEWAY_TIMEOUT: 504,
+  UNSUPPORTED_MEDIA_TYPE: 415
 }
 
 export enum UserVerifyStatusType {
@@ -69,4 +72,9 @@ export enum TokenType {
   RefreshToken,
   ForgotPasswordToken,
   EmailVerifyToken
+}
+
+export const DIR = {
+  UPLOAD_TEMP_DIR: path.resolve('uploads/temp'),
+  UPLOAD_DIR: path.resolve('uploads')
 }

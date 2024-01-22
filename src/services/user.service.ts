@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongodb'
-import { HTTP_STATUS, TokenType, UserVerifyStatusType } from 'src/utils/constant'
-import { signToken } from 'src/utils/jwt'
 import { RegisterRequestBody, UpdateMeRequestBody } from '~/models/requests/user.request'
+
 import databaseService from './database.service'
 import User from '~/models/schemas/user.schema'
-import { hashPassword } from '~/utils/crypto'
 import RefreshToken from '~/models/schemas/refresh-token.schema'
-import { ErrorStatus } from '~/models/error-status'
 import Follower from '~/models/schemas/follower.schema'
+import { signToken } from 'src/utils/jwt'
+import { ErrorStatus } from '~/models/error-status'
+import { hashPassword } from '~/utils/crypto'
+import { HTTP_STATUS, TokenType, UserVerifyStatusType } from 'src/utils/constant'
 
 class UserService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatusType }) {
