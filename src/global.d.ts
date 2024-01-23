@@ -1,7 +1,7 @@
 import { Request } from 'express'
 import User from './models/schemas/user.schema'
 import RefreshToken from './models/schemas/refresh-token.schema'
-import { TokenType, UserVerifyStatusType } from './utils/constant'
+import { TokenType, UserVerifyStatusType } from '~/utils/constant'
 
 interface DecodedTokenType {
   user_id: string

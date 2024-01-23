@@ -50,3 +50,7 @@ export interface ProfileParams {
 export interface UnfollowParams extends ParamsDictionary {
   user_id: string
 }
+
+export interface ServeImageParams extends ParamsDictionary {
+  name: string
+}

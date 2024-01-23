@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { UserVerifyStatusType } from 'src/utils/constant'
+import { UserVerifyStatusType } from '~/utils/constant'
 
 interface UserType {
   _id?: ObjectId

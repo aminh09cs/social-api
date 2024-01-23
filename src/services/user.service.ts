@@ -5,10 +5,10 @@ import databaseService from './database.service'
 import User from '~/models/schemas/user.schema'
 import RefreshToken from '~/models/schemas/refresh-token.schema'
 import Follower from '~/models/schemas/follower.schema'
-import { signToken } from 'src/utils/jwt'
+import { signToken } from '~/utils/jwt'
 import { ErrorStatus } from '~/models/error-status'
 import { hashPassword } from '~/utils/crypto'
-import { HTTP_STATUS, TokenType, UserVerifyStatusType } from 'src/utils/constant'
+import { HTTP_STATUS, TokenType, UserVerifyStatusType } from '~/utils/constant'
 
 class UserService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatusType }) {

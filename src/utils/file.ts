@@ -14,12 +14,13 @@ export const createFolder = () => {
   }
 }
 
-export const handleUploadSingleFile = async (req: Request) => {
+export const handleUploadImage = async (req: Request) => {
   const form = formidable({
     uploadDir: DIR.UPLOAD_TEMP_DIR,
-    // maxFiles: 1,
+    maxFiles: 4,
     keepExtensions: true,
-    maxFileSize: 1024 * 1024, //1mb
+    maxFileSize: 300 * 1024, //300kb
+    maxTotalFileSize: 300 * 1024 * 4,
     filter: function ({ name, originalFilename, mimetype }) {
       const isValid = name === 'image' && Boolean(mimetype?.includes('image/'))
 
@@ -34,7 +35,7 @@ export const handleUploadSingleFile = async (req: Request) => {
     }
   })
 
-  return new Promise<File>((resolve, reject) => {
+  return new Promise<File[]>((resolve, reject) => {
     form.parse(req, async (err, fields, files) => {
       if (err) {
         return reject(err)
@@ -44,7 +45,7 @@ export const handleUploadSingleFile = async (req: Request) => {
           new ErrorStatus({ message: 'File type is not empty', status: HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE })
         )
       }
-      resolve(files.image[0])
+      resolve(files.image)
     })
   })
 }

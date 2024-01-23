@@ -74,6 +74,11 @@ export enum TokenType {
   EmailVerifyToken
 }
 
+export enum MediaType {
+  Image,
+  Video
+}
+
 export const DIR = {
   UPLOAD_TEMP_DIR: path.resolve('uploads/temp'),
   UPLOAD_DIR: path.resolve('uploads')

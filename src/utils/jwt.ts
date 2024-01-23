@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
-import { HTTP_STATUS } from 'src/utils/constant'
-import { ErrorStatus } from 'src/models/error-status'
+import { HTTP_STATUS } from '~/utils/constant'
+import { ErrorStatus } from '~/models/error-status'
 import '~/utils/dotenv'
 
 interface jwtTokenType {
