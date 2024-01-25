@@ -54,3 +54,5 @@ export interface UnfollowParams extends ParamsDictionary {
 export interface ServeImageParams extends ParamsDictionary {
   name: string
 }
+
+export interface ServeVideoParams extends ServeImageParams {}

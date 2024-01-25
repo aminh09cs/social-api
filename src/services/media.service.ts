@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
 
-import { handleUploadImage } from '~/utils/file'
+import { handleUploadImage, handleUploadVideo } from '~/utils/file'
 import { DIR, MediaType } from '~/utils/constant'
 import { isProduction } from '~/utils/config'
 import { Media } from '~/models/rest'
@@ -16,7 +16,7 @@ class MediaService {
       files.map(async (file) => {
         await sharp(file.filepath)
           .jpeg()
-          .toFile(path.resolve(DIR.UPLOAD_DIR, `${file.newFilename.split('.')[0]}.jpg`))
+          .toFile(path.resolve(DIR.UPLOAD_IMAGE_DIR, `${file.newFilename.split('.')[0]}.jpg`))
         fs.unlinkSync(file.filepath)
         return {
           url: isProduction
@@ -26,6 +26,18 @@ class MediaService {
         }
       })
     )
+    return result
+  }
+  async handleUploadVideo(req: Request) {
+    const files = await handleUploadVideo(req)
+    const result: Media[] = files.map((file) => {
+      return {
+        url: isProduction
+          ? `${process.env.HOST}/web/static/video/${file.newFilename}`
+          : `http://localhost:${process.env.PORT}/web/static/video/${file.newFilename}`,
+        type: MediaType.Video
+      }
+    })
     return result
   }
 }

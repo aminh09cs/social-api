@@ -42,9 +42,12 @@ export const MESSAGES = {
   YOU_CANNOT_UNFOLLOW_YOURSELF: "You can't unfollow yourself",
 
   USER_ID_IS_REQUIRED: 'User id is required',
-  USER_ID_IS_INVALID: 'User id is invalid'
+  USER_ID_IS_INVALID: 'User id is invalid',
+
+  REQUIRES_RANGE_HEADER: 'Requires range header'
 }
 export const HTTP_STATUS = {
+  PARTIAL_CONTENT: 206,
   UNAUTHORIZED: 401,
   UNPROCESSABLE_ENTITY: 422,
   NOT_FOUND: 404,
@@ -80,6 +83,8 @@ export enum MediaType {
 }
 
 export const DIR = {
-  UPLOAD_TEMP_DIR: path.resolve('uploads/temp'),
-  UPLOAD_DIR: path.resolve('uploads')
+  UPLOAD_IMAGE_TEMP_DIR: path.resolve('uploads/images/temp'),
+  UPLOAD_IMAGE_DIR: path.resolve('uploads/images'),
+  UPLOAD_VIDEO_TEMP_DIR: path.resolve('uploads/videos/temp'),
+  UPLOAD_VIDEO_DIR: path.resolve('uploads/videos')
 }

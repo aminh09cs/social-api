@@ -15,7 +15,7 @@ app.use(express.json())
 
 app.use('/web', MainRouter)
 
-//app.use('/media', express.static(DIR.UPLOAD_DIR))
+//app.use('/media', express.static(DIR.UPLOAD_IMAGE_DIR))
 
 app.use(errorHandling)
 

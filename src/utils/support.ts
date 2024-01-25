@@ -8,7 +8,6 @@ export const validate = (schema: RunnableValidationChains<ValidationChain>) => {
     await schema.run(req)
     const errors = validationResult(req)
     const errorsMapped = errors.mapped()
-    console.log(errors)
     if (errors.isEmpty()) {
       return next()
     }

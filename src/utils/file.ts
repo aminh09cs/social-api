@@ -9,14 +9,16 @@ import { HTTP_STATUS } from './constant'
 import { DIR } from './constant'
 
 export const createFolder = () => {
-  if (!fs.existsSync(DIR.UPLOAD_TEMP_DIR)) {
-    fs.mkdirSync(DIR.UPLOAD_TEMP_DIR, { recursive: true })
-  }
+  ;[DIR.UPLOAD_IMAGE_TEMP_DIR, DIR.UPLOAD_VIDEO_TEMP_DIR].forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true })
+    }
+  })
 }
 
 export const handleUploadImage = async (req: Request) => {
   const form = formidable({
-    uploadDir: DIR.UPLOAD_TEMP_DIR,
+    uploadDir: DIR.UPLOAD_IMAGE_TEMP_DIR,
     maxFiles: 4,
     keepExtensions: true,
     maxFileSize: 300 * 1024, //300kb
@@ -46,6 +48,42 @@ export const handleUploadImage = async (req: Request) => {
         )
       }
       resolve(files.image)
+    })
+  })
+}
+
+export const handleUploadVideo = async (req: Request) => {
+  const form = formidable({
+    uploadDir: DIR.UPLOAD_VIDEO_DIR,
+    maxFiles: 1,
+    keepExtensions: true,
+    maxFileSize: 30 * 1024 * 1024, //30mb
+    filter: function ({ name, originalFilename, mimetype }) {
+      const isValid = name === 'video' && Boolean(mimetype?.includes('mp4'))
+
+      if (!isValid) {
+        console.log(isValid)
+        form.emit(
+          'error' as any,
+          new ErrorStatus({ message: 'File type is invalid', status: HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE }) as any
+        )
+      }
+      return isValid
+    }
+  })
+
+  return new Promise<File[]>((resolve, reject) => {
+    form.parse(req, async (err, fields, files) => {
+      console.log(files)
+      if (err) {
+        return reject(err)
+      }
+      if (!files.video) {
+        return reject(
+          new ErrorStatus({ message: 'File type is not empty', status: HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE })
+        )
+      }
+      resolve(files.video)
     })
   })
 }
