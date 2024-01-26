@@ -31,6 +31,9 @@ export interface ChangePasswordRequestBody {
   new_password: string
   confirm_password: string
 }
+export interface RefreshTokenBody {
+  refresh_token: string
+}
 export interface UpdateMeRequestBody {
   name?: string
   date_of_birth?: string

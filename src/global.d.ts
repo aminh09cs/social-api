@@ -17,5 +17,6 @@ declare module 'express-serve-static-core' {
     decoded_authorization?: typeof DecodedTokenType
     decoded_email_verify_token?: typeof DecodedTokenType
     decoded_forgot_password_token?: typeof DecodedTokenType
+    decoded_refresh_token?: typeof DecodedTokenType
   }
 }
