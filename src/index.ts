@@ -3,9 +3,14 @@ import database from './services/database.service'
 import { MainRouter } from './routes'
 import { errorHandling } from '~/utils/error-handling'
 import { createFolder } from '~/utils/file'
+import databaseService from './services/database.service'
 //import { DIR } from '~/utils/constant'
 
-database.connectDatabase().catch(console.dir)
+database.connectDatabase().then(() => {
+  databaseService.createIndexUsers()
+  databaseService.createIndexRefreshTokens()
+  databaseService.createIndexFollowers()
+})
 
 const app = express()
 const port = process.env.PORT || 4000

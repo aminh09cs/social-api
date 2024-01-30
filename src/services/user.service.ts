@@ -5,7 +5,7 @@ import databaseService from './database.service'
 import User from '~/models/schemas/user.schema'
 import RefreshToken from '~/models/schemas/refresh-token.schema'
 import Follower from '~/models/schemas/follower.schema'
-import { signToken } from '~/utils/jwt'
+import { signToken, verifyToken } from '~/utils/jwt'
 import { ErrorStatus } from '~/models/error-status'
 import { hashPassword } from '~/utils/crypto'
 import { HTTP_STATUS, TokenType, UserVerifyStatusType } from '~/utils/constant'
@@ -22,7 +22,18 @@ class UserService {
       options: { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
     })
   }
-  private signRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatusType }) {
+  private signRefreshToken({ user_id, verify, exp }: { user_id: string; verify: UserVerifyStatusType; exp?: number }) {
+    if (exp) {
+      return signToken({
+        payload: {
+          user_id,
+          token_type: TokenType.RefreshToken,
+          verify,
+          exp
+        },
+        privateKey: process.env.JWT_REFRESH_TOKEN_KEY as string
+      })
+    }
     return signToken({
       payload: {
         user_id,
@@ -57,6 +68,12 @@ class UserService {
       options: { expiresIn: process.env.JWT_FORGOT_PASSWORD_TOKEN_EXPIRES_IN }
     })
   }
+  private decodedRefreshToken({ refresh_token }: { refresh_token: string }) {
+    return verifyToken({
+      token: refresh_token,
+      secretKey: process.env.JWT_REFRESH_TOKEN_KEY as string
+    })
+  }
 
   async register(payload: RegisterRequestBody) {
     const user_id = new ObjectId()
@@ -85,8 +102,10 @@ class UserService {
       this.signAccessToken({ user_id: user_id.toString(), verify: verify }),
       this.signRefreshToken({ user_id: user_id.toString(), verify: verify })
     ])
+    const { iat, exp } = await this.decodedRefreshToken({ refresh_token })
+    if (!iat || !exp) return
     await databaseService.refresh_tokens.insertOne(
-      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token, iat, exp })
     )
     return { access_token, refresh_token }
   }
@@ -98,19 +117,23 @@ class UserService {
   async refreshToken({
     user_id,
     verify,
-    refresh_token
+    refresh_token,
+    exp
   }: {
     user_id: string
     verify: UserVerifyStatusType
     refresh_token: string
+    exp: number
   }) {
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id: user_id.toString(), verify: verify }),
-      this.signRefreshToken({ user_id: user_id.toString(), verify: verify }),
+      this.signRefreshToken({ user_id: user_id.toString(), verify: verify, exp: exp }),
       databaseService.refresh_tokens.deleteOne({ token: refresh_token })
     ])
+    const { iat } = await this.decodedRefreshToken({ refresh_token: new_refresh_token })
+    if (!iat || !exp) return
     await databaseService.refresh_tokens.insertOne(
-      new RefreshToken({ user_id: new ObjectId(user_id), token: new_refresh_token })
+      new RefreshToken({ user_id: new ObjectId(user_id), token: new_refresh_token, iat, exp })
     )
     return {
       access_token: new_access_token,
@@ -123,18 +146,35 @@ class UserService {
     return Boolean(user)
   }
   async verifyEmail({ user_id }: { user_id: string }) {
-    await databaseService.users.updateOne(
-      { _id: new ObjectId(user_id) },
-      {
-        $set: {
-          email_verify_token: '',
-          verify: UserVerifyStatusType.Verified
-        },
-        $currentDate: {
-          update_at: true
+    const [access_token, refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id: user_id.toString(), verify: UserVerifyStatusType.Verified }),
+      this.signRefreshToken({ user_id: user_id.toString(), verify: UserVerifyStatusType.Verified }),
+      databaseService.users.updateOne(
+        { _id: new ObjectId(user_id) },
+        {
+          $set: {
+            email_verify_token: '',
+            verify: UserVerifyStatusType.Verified
+          },
+          $currentDate: {
+            update_at: true
+          }
         }
-      }
+      )
+    ])
+
+    const { iat, exp } = await this.decodedRefreshToken({ refresh_token })
+    if (!iat || !exp) return
+    console.log('hehe', {
+      refresh_token: refresh_token,
+      user_id: user_id,
+      iat: iat,
+      exp: exp
+    })
+    await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token, iat, exp })
     )
+    return { access_token, refresh_token }
   }
 
   async resendEmail({ user_id }: { user_id: string }) {
