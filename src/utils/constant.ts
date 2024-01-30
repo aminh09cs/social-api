@@ -82,6 +82,16 @@ export enum MediaType {
   Video
 }
 
+export enum TweetType {
+  Tweet,
+  Retweet,
+  Comment
+}
+export enum TweetAudience {
+  EveryOne,
+  NoUser
+}
+
 export const DIR = {
   UPLOAD_IMAGE_TEMP_DIR: path.resolve('uploads/images/temp'),
   UPLOAD_IMAGE_DIR: path.resolve('uploads/images'),

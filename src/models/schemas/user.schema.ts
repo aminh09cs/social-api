@@ -35,14 +35,14 @@ export default class User {
   avatar: string
 
   constructor(user: UserType) {
-    const innitiated_date = new Date()
+    const initiated_date = new Date()
     this._id = user._id
     this.name = user.name || ''
     this.email = user.email
     this.password = user.password
     this.date_of_birth = user.date_of_birth || new Date()
-    this.create_at = user.create_at || innitiated_date
-    this.update_at = user.update_at || innitiated_date
+    this.create_at = user.create_at || initiated_date
+    this.update_at = user.update_at || initiated_date
     this.email_verify_token = user.email_verify_token || ''
     this.forgot_password_token = user.forgot_password_token || ''
     this.verify = user.verify || UserVerifyStatusType.Unverified
