@@ -64,8 +64,8 @@ export const refreshTokenController = async (
   next: NextFunction
 ) => {
   const { refresh_token } = req.body
-  const { user_id, verify, exp } = req.decoded_refresh_token
-  const result = await userService.refreshToken({ user_id, verify, refresh_token, exp })
+  const { user_id, verify } = req.decoded_refresh_token
+  const result = await userService.refreshToken({ user_id, verify, refresh_token })
   return res.json({
     message: 'Refresh Token Successfully',
     result
@@ -91,10 +91,9 @@ export const verifyEmailTokenController = async (
     })
   }
 
-  const result = await userService.verifyEmail({ user_id })
+  await userService.verifyEmail({ user_id })
   return res.json({
-    message: 'Verify Email Successfully',
-    result
+    message: 'Verify Email Successfully'
   })
 }
 
